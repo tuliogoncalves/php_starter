@@ -1,0 +1,64 @@
+# 
+# Docker-PHP
+#
+services:
+    php:
+        container_name: projeto_docker.php
+        hostname: projeto_docker.php
+        image: projeto_docker:php82
+        build:
+            context: ./sail_builders
+            dockerfile: Dockerfile_php82
+        restart: unless-stopped
+        # entrypoint: /bin/sh
+        # stdin_open: true
+        # tty: true
+        # privileged: true
+        volumes:
+            - ./:/var/www
+            - ./sail_builders/supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+            - ./sail_builders/supervisor/php-fpm.ini:/etc/supervisor.d/php-fpm.ini
+        networks:
+            - app
+            - proxy
+
+    nginx:
+        container_name: projeto_docker.nginx
+        hostname: projeto_docker.back
+        image: nginx:stable-alpine
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        volumes: 
+            - ./:/var/www
+            # - ./sail_builders/common/nginx.dev.conf/:/etc/nginx/conf.d/dev.conf
+            - ./sail_builders/common/nginx-http.conf:/etc/nginx/nginx.conf
+            - ./sail_builders/common/nginx-server.conf:/etc/nginx/http.d/default.conf
+        networks: 
+            - app
+            - proxy
+
+    nodejs:
+        container_name: projeto_docker.nodejs
+        hostname: projeto_docker.front
+        image: projeto_docker:node18
+        build:
+            context: ./sail_builders
+            dockerfile: Dockerfile_node18
+        tty: true
+        restart: unless-stopped
+        # ports:
+        #     - "80:5173"
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks: 
+            - app
+            - proxy
+networks:
+  app:
+    name: projeto_docker
+
+  proxy:
+    name: proxy
+    external: true
