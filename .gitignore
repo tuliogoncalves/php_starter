@@ -20,8 +20,3 @@ yarn-error.log
 
 /sail_builders/logs
 
-/sail_builders
-
-sail_make.sh
-.sail.env
-sail-docker-compose-local.yml
