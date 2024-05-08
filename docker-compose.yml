@@ -3,9 +3,9 @@
 #
 services:
     php:
-        container_name: projeto_docker.php
-        hostname: projeto_docker.php
-        image: projeto_docker:php82
+        container_name: php_starter.php
+        hostname: php_starter.php
+        image: php_starter:php82
         build:
             context: ./sail_builders
             dockerfile: Dockerfile_php82
@@ -23,8 +23,8 @@ services:
             - proxy
 
     nginx:
-        container_name: projeto_docker.nginx
-        hostname: projeto_docker.back
+        container_name: php_starter.nginx
+        hostname: php_starter.back
         image: nginx:stable-alpine
         restart: unless-stopped
         ports:
@@ -39,9 +39,9 @@ services:
             - proxy
 
     nodejs:
-        container_name: projeto_docker.nodejs
-        hostname: projeto_docker.front
-        image: projeto_docker:node18
+        container_name: php_starter.nodejs
+        hostname: php_starter.front
+        image: php_starter:node18
         build:
             context: ./sail_builders
             dockerfile: Dockerfile_node18
@@ -57,7 +57,7 @@ services:
             - proxy
 networks:
   app:
-    name: projeto_docker
+    name: php_starter
 
   proxy:
     name: proxy
